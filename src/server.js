@@ -8,41 +8,7 @@ const path = require('path');
 const fs = require('fs/promises');
 const { AgentBrowser } = require('./browser');
 const { assertValidAppManifest } = require('./app-runtime/manifest');
-
-// --- CUSTOM TEXTWEB INTERCEPTOR ---
-const URL_REDIRECTS = {
-  'weather.com': 'wttr.in',
-  'www.weather.com': 'wttr.in',
-  'accuweather.com': 'wttr.in',
-  'wunderground.com': 'wttr.in',
-  'cnn.com': 'lite.cnn.com',
-  'www.cnn.com': 'lite.cnn.com',
-  'npr.org': 'text.npr.org',
-  'www.npr.org': 'text.npr.org',
-  'bbc.com': 'text.npr.org',
-  'amazon.com': 'lite.duckduckgo.com',
-};
-
-function interceptUrl(requestedUrl) {
-  try {
-    const urlObj = new URL(requestedUrl);
-    const domain = urlObj.hostname.replace(/^www\./, '');
-
-    if (URL_REDIRECTS[domain]) {
-      const newDomain = URL_REDIRECTS[domain];
-
-      if (newDomain === 'wttr.in') return 'https://wttr.in';
-      if (newDomain === 'lite.duckduckgo.com') return 'https://lite.duckduckgo.com';
-
-      return `https://${newDomain}`;
-    }
-  } catch (error) {
-    // Let malformed URLs fail in the normal navigation path.
-  }
-
-  return requestedUrl;
-}
-// ----------------------------------
+const { interceptUrl } = require('./url-redirects');
 
 class TextWebServer {
   constructor(options = {}) {
@@ -282,12 +248,18 @@ class TextWebServer {
     }
     
     await this.initBrowser();
-    const url = interceptUrl(String(body.url));
-    const result = await this.browser.navigate(url, body.options);
+    const redirect = interceptUrl(String(body.url));
+    const result = await this.browser.navigate(redirect.finalUrl, body.options);
     
     this.sendJSON(res, {
       success: true,
-      url,
+      requestedUrl: redirect.requestedUrl,
+      url: redirect.finalUrl,
+      redirect: redirect.redirected ? {
+        from: redirect.requestedUrl,
+        to: redirect.finalUrl,
+        matchedHost: redirect.matchedHost
+      } : null,
       view: result.view,
       elements: result.elements,
       meta: result.meta
