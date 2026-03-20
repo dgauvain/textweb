@@ -1,0 +1,37 @@
+{
+  "weather.com": {
+    "target": "https://wttr.in",
+    "preservePath": false,
+    "preserveQuery": false
+  },
+  "accuweather.com": {
+    "target": "https://wttr.in",
+    "preservePath": false,
+    "preserveQuery": false
+  },
+  "wunderground.com": {
+    "target": "https://wttr.in",
+    "preservePath": false,
+    "preserveQuery": false
+  },
+  "cnn.com": {
+    "target": "https://lite.cnn.com",
+    "preservePath": false,
+    "preserveQuery": false
+  },
+  "npr.org": {
+    "target": "https://text.npr.org",
+    "preservePath": false,
+    "preserveQuery": false
+  },
+  "bbc.com": {
+    "target": "https://text.npr.org",
+    "preservePath": false,
+    "preserveQuery": false
+  },
+  "amazon.com": {
+    "target": "https://lite.duckduckgo.com",
+    "preservePath": false,
+    "preserveQuery": false
+  }
+}

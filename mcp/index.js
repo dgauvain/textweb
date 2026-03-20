@@ -12,41 +12,7 @@
 
 const { AgentBrowser } = require('../src/browser');
 const { ensureBrowser } = require('../src/ensure-browser');
-
-// --- CUSTOM TEXTWEB INTERCEPTOR ---
-const URL_REDIRECTS = {
-  'weather.com': 'wttr.in',
-  'www.weather.com': 'wttr.in',
-  'accuweather.com': 'wttr.in',
-  'wunderground.com': 'wttr.in',
-  'cnn.com': 'lite.cnn.com',
-  'www.cnn.com': 'lite.cnn.com',
-  'npr.org': 'text.npr.org',
-  'www.npr.org': 'text.npr.org',
-  'bbc.com': 'text.npr.org',
-  'amazon.com': 'lite.duckduckgo.com',
-};
-
-function interceptUrl(requestedUrl) {
-  try {
-    const urlObj = new URL(requestedUrl);
-    const domain = urlObj.hostname.replace(/^www\./, '');
-
-    if (URL_REDIRECTS[domain]) {
-      const newDomain = URL_REDIRECTS[domain];
-
-      if (newDomain === 'wttr.in') return 'https://wttr.in';
-      if (newDomain === 'lite.duckduckgo.com') return 'https://lite.duckduckgo.com';
-
-      return `https://${newDomain}`;
-    }
-  } catch (error) {
-    // Let malformed URLs fail in the normal navigation path.
-  }
-
-  return requestedUrl;
-}
-// ----------------------------------
+const { interceptUrl } = require('../src/url-redirects');
 
 const SERVER_INFO = {
   name: 'textweb',
@@ -268,12 +234,16 @@ async function getBrowser(args = {}) {
   return { browser, sessionId };
 }
 
-function formatResult(result) {
+function formatResult(result, redirect) {
   const refs = Object.entries(result.elements || {})
     .map(([ref, el]) => `[${ref}] ${el.semantic}: ${el.text || '(no text)'}`)
     .join('\n');
 
-  return `URL: ${result.meta?.url || 'unknown'}\nTitle: ${result.meta?.title || 'unknown'}\nRefs: ${result.meta?.totalRefs || 0}\n\n${result.view}\n\nInteractive elements:\n${refs}`;
+  const redirectLine = redirect?.redirected
+    ? `Redirected: ${redirect.requestedUrl} -> ${redirect.finalUrl}\n`
+    : '';
+
+  return `${redirectLine}URL: ${result.meta?.url || 'unknown'}\nTitle: ${result.meta?.title || 'unknown'}\nRefs: ${result.meta?.totalRefs || 0}\n\n${result.view}\n\nInteractive elements:\n${refs}`;
 }
 
 function retryOptions(args = {}) {
@@ -335,9 +305,9 @@ async function executeTool(name, args = {}) {
 
   switch (name) {
     case 'textweb_navigate': {
-      const url = interceptUrl(String(args.url));
-      const result = await b.navigate(url, retryOptions(args));
-      return formatResult(result);
+      const redirect = interceptUrl(String(args.url));
+      const result = await b.navigate(redirect.finalUrl, retryOptions(args));
+      return formatResult(result, redirect);
     }
     case 'textweb_click': {
       const result = await b.click(args.ref, retryOptions(args));

@@ -107,6 +107,38 @@ Then just ask: *"Go to hacker news and find posts about AI"* — the agent uses 
 - `textweb_wait_for` for multi-step async UI transitions
 - `textweb_assert_field` for flow guards before submit
 
+### Redirect Rules For Text-Friendly Sites
+
+If you want small models to prefer text and bot-friendly sites, edit [`config/url-redirects.json`](config/url-redirects.json). TextWeb loads this file at startup and rewrites matching hosts before navigation.
+
+Example:
+
+```json
+{
+  "weather.com": {
+    "target": "https://wttr.in",
+    "preservePath": false,
+    "preserveQuery": false
+  },
+  "cnn.com": {
+    "target": "https://lite.cnn.com",
+    "preservePath": false,
+    "preserveQuery": false
+  }
+}
+```
+
+Rule behavior:
+- `target`: destination URL to use instead of the requested host
+- `preservePath`: keep the original request path on the new host
+- `preserveQuery`: keep the original query string on the new host
+
+Optional overrides:
+- Create `config/url-redirects.local.json` for machine-local rules you do not want in Git
+- Or point `TEXTWEB_URL_REDIRECTS_FILE` at a different JSON file
+
+When a redirect is applied, MCP output includes a `Redirected: ... -> ...` line, and the HTTP API includes a `redirect` object in the JSON response.
+
 ### 🛠️ OpenAI / Anthropic Function Calling
 
 Drop-in tool definitions for any function-calling model. See [`tools/tool_definitions.json`](tools/tool_definitions.json).
