@@ -13,6 +13,41 @@
 const { AgentBrowser } = require('../src/browser');
 const { ensureBrowser } = require('../src/ensure-browser');
 
+// --- CUSTOM TEXTWEB INTERCEPTOR ---
+const URL_REDIRECTS = {
+  'weather.com': 'wttr.in',
+  'www.weather.com': 'wttr.in',
+  'accuweather.com': 'wttr.in',
+  'wunderground.com': 'wttr.in',
+  'cnn.com': 'lite.cnn.com',
+  'www.cnn.com': 'lite.cnn.com',
+  'npr.org': 'text.npr.org',
+  'www.npr.org': 'text.npr.org',
+  'bbc.com': 'text.npr.org',
+  'amazon.com': 'lite.duckduckgo.com',
+};
+
+function interceptUrl(requestedUrl) {
+  try {
+    const urlObj = new URL(requestedUrl);
+    const domain = urlObj.hostname.replace(/^www\./, '');
+
+    if (URL_REDIRECTS[domain]) {
+      const newDomain = URL_REDIRECTS[domain];
+
+      if (newDomain === 'wttr.in') return 'https://wttr.in';
+      if (newDomain === 'lite.duckduckgo.com') return 'https://lite.duckduckgo.com';
+
+      return `https://${newDomain}`;
+    }
+  } catch (error) {
+    // Let malformed URLs fail in the normal navigation path.
+  }
+
+  return requestedUrl;
+}
+// ----------------------------------
+
 const SERVER_INFO = {
   name: 'textweb',
   version: '0.2.2',
@@ -300,7 +335,8 @@ async function executeTool(name, args = {}) {
 
   switch (name) {
     case 'textweb_navigate': {
-      const result = await b.navigate(args.url, retryOptions(args));
+      const url = interceptUrl(String(args.url));
+      const result = await b.navigate(url, retryOptions(args));
       return formatResult(result);
     }
     case 'textweb_click': {
