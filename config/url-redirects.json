@@ -1,4 +1,29 @@
 {
+  "google.com": {
+    "target": "https://lite.duckduckgo.com/lite/",
+    "preservePath": false,
+    "preserveQuery": true
+  },
+  "bing.com": {
+    "target": "https://lite.duckduckgo.com/lite/",
+    "preservePath": false,
+    "preserveQuery": true
+  },
+  "duckduckgo.com": {
+    "target": "https://lite.duckduckgo.com/lite/",
+    "preservePath": false,
+    "preserveQuery": true
+  },
+  "scholar.google.com": {
+    "target": "https://lite.duckduckgo.com/lite/",
+    "preservePath": false,
+    "preserveQuery": true
+  },
+  "wikipedia.org": {
+    "target": "https://en.wikipedia.org",
+    "preservePath": true,
+    "preserveQuery": false
+  },
   "weather.com": {
     "target": "https://wttr.in",
     "preservePath": false,
@@ -14,12 +39,42 @@
     "preservePath": false,
     "preserveQuery": false
   },
+  "weather.gov": {
+    "target": "https://wttr.in",
+    "preservePath": false,
+    "preserveQuery": false
+  },
   "cnn.com": {
+    "target": "https://lite.cnn.com",
+    "preservePath": true,
+    "preserveQuery": false
+  },
+  "npr.org": {
+    "target": "https://text.npr.org",
+    "preservePath": true,
+    "preserveQuery": false
+  },
+  "cbc.ca": {
+    "target": "https://www.cbc.ca/lite/news",
+    "preservePath": false,
+    "preserveQuery": false
+  },
+  "nytimes.com": {
+    "target": "https://brutalist.report",
+    "preservePath": false,
+    "preserveQuery": false
+  },
+  "washingtonpost.com": {
+    "target": "https://brutalist.report",
+    "preservePath": false,
+    "preserveQuery": false
+  },
+  "foxnews.com": {
     "target": "https://lite.cnn.com",
     "preservePath": false,
     "preserveQuery": false
   },
-  "npr.org": {
+  "apnews.com": {
     "target": "https://text.npr.org",
     "preservePath": false,
     "preserveQuery": false
@@ -29,8 +84,58 @@
     "preservePath": false,
     "preserveQuery": false
   },
+  "reuters.com": {
+    "target": "https://skimfeed.com/",
+    "preservePath": false,
+    "preserveQuery": false
+  },
+  "bloomberg.com": {
+    "target": "https://brutalist.report",
+    "preservePath": false,
+    "preserveQuery": false
+  },
+  "wired.com": {
+    "target": "https://brutalist.report",
+    "preservePath": false,
+    "preserveQuery": false
+  },
+  "wsj.com": {
+    "target": "https://brutalist.report",
+    "preservePath": false,
+    "preserveQuery": false
+  },
+  "reddit.com": {
+    "target": "https://old.reddit.com",
+    "preservePath": true,
+    "preserveQuery": true
+  },
   "amazon.com": {
-    "target": "https://lite.duckduckgo.com",
+    "target": "https://lite.duckduckgo.com/lite/",
+    "preservePath": false,
+    "preserveQuery": true
+  },
+  "news.google.com": {
+    "target": "https://en.wikipedia.org/wiki/Portal:Current_events",
+    "preservePath": false,
+    "preserveQuery": false
+  },
+  "legiblenews.com": {
+    "target": "https://en.wikipedia.org/wiki/Portal:Current_events",
+    "preservePath": false,
+    "preserveQuery": false
+  },
+  "walmart.com": {
+    "target": "https://lite.duckduckgo.com/lite/",
+    "preservePath": false,
+    "preserveQuery": true
+  },
+  "yelp.com": {
+    "target": "https://lite.duckduckgo.com/lite/",
+    "preservePath": false,
+    "preserveQuery": true
+  },
+  "csmonitor.com": {
+    "target": "https://www.csmonitor.com/text_edition",
     "preservePath": false,
     "preserveQuery": false
   }
